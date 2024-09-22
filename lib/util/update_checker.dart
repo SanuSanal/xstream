@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart'; // For getting app version info
 
 class UpdateChecker {
   final String owner = 'SanuSanal';
-  final String repo = 'Football-Live';
+  final String repo = 'xstream';
 
   Future<String?> getLatestReleaseVersion() async {
     final url = 'https://api.github.com/repos/$owner/$repo/releases/latest';
