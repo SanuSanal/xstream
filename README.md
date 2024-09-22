@@ -64,7 +64,6 @@ Feel free to add your favorite streaming sites to the list!
 
 ## 📸 App Screenshots
 
-Place screenshots of your app in this section to showcase its UI and features.
 
 
 ## 💪 Contributing
