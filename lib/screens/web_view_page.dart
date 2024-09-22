@@ -87,7 +87,7 @@ class WebViewPageState extends State<WebViewPage> {
     });
   }
 
-  _refreshConfigurationValues() async {
+  Future<void> _refreshConfigurationValues() async {
     bool landscapeOnFullscreen = true;
     String? landscapeOnFullscreenVal =
         await dbService.getConfigurationValue('landscape_on_fullscreen');
@@ -192,7 +192,7 @@ class WebViewPageState extends State<WebViewPage> {
     _showSnackBarMessage('Cache cleared.');
   }
 
-  void _initializeWhiteListedDomains() async {
+  Future<void> _initializeWhiteListedDomains() async {
     List<String> domains = [];
 
     var data = await dbService.getData('whitelisted_domain');
@@ -231,6 +231,13 @@ class WebViewPageState extends State<WebViewPage> {
         ],
       ),
     );
+  }
+
+  void _refreshConfigandDomains() async {
+    await Future.wait([
+      _refreshConfigurationValues(),
+      _initializeWhiteListedDomains(),
+    ]);
   }
 
   @override
@@ -296,7 +303,7 @@ class WebViewPageState extends State<WebViewPage> {
                       MaterialPageRoute(
                           builder: (context) => const SettingsPage()),
                     ).then((value) {
-                      _refreshConfigurationValues();
+                      _refreshConfigandDomains();
                     });
                   },
                 ),
