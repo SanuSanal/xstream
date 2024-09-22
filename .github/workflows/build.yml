@@ -1,4 +1,4 @@
-name: Football Live App Build and Versioning
+name: XStream App Build and Versioning
 
 on:
   push:
@@ -112,7 +112,7 @@ jobs:
           build/app/outputs/apk/release/xstream-$SIMPLE_VERSION_NAME-arm64-v8a-release.apk \
           build/app/outputs/apk/release/xstream-$SIMPLE_VERSION_NAME-x86_64-release.apk \
           --title "Release v$SIMPLE_VERSION_NAME" \
-          --notes "Download and track anjus duties."
+          --notes "Download and enjoy. Happy streaming!"
 
       - name: Commit version change
         run: |
