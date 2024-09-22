@@ -23,30 +23,9 @@ class DatabaseService {
           "CREATE TABLE home_page(id INTEGER PRIMARY KEY AUTOINCREMENT, url TEXT, active BOOLEAN)",
         );
 
-        await db.insert(
-            'home_page', {'url': 'https://soccerlive.app/', 'active': 1});
-        await db.insert(
-            'home_page', {'url': 'https://www.crictime.com', 'active': 0});
-        await db.insert(
-            'home_page', {'url': 'https://www.webcric.com', 'active': 0});
-        await db.insert(
-            'home_page', {'url': 'https://me.webcric.com/', 'active': 0});
-
         await db.execute(
           "CREATE TABLE whitelisted_domain(id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT)",
         );
-
-        await db.insert('whitelisted_domain', {'text': 'soccerlive'});
-        await db.insert('whitelisted_domain', {'text': 'streameast'});
-        await db.insert('whitelisted_domain', {'text': '1stream'});
-        await db.insert('whitelisted_domain', {'text': 'methstreams'});
-        await db.insert('whitelisted_domain', {'text': 'methstreamer'});
-        await db.insert('whitelisted_domain', {'text': 'buffstreams'});
-        await db.insert('whitelisted_domain', {'text': 'soccerstreamlinks'});
-        await db.insert('whitelisted_domain', {'text': 'vivosoccer'});
-        await db.insert('whitelisted_domain', {'text': 'weakspell'});
-        await db.insert('whitelisted_domain', {'text': 'elixx'});
-        await db.insert('whitelisted_domain', {'text': 'gameshdlive'});
 
         await db.execute(
           "CREATE TABLE configurations(id INTEGER PRIMARY KEY AUTOINCREMENT, key TEXT, value Text)",
