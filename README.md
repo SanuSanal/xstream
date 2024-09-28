@@ -12,7 +12,7 @@ Welcome to **XStream**, the ultimate solution for hassle-free sports streaming! 
 
 > ⚠️ **Note**: Some streaming sites, such as SoccerLive, may not be secure. Use them with caution to avoid potential security risks.
 
-## 🚀 Download XStream
+## ⬇️ Download XStream
 
 [![Download XStream](https://img.shields.io/badge/Download-XStream-blue?style=for-the-badge&logo=github)](https://github.com/SanuSanal/xstream/releases/)
 
