@@ -12,6 +12,11 @@ Welcome to **XStream**, the ultimate solution for hassle-free sports streaming! 
 
 > ⚠️ **Note**: Some streaming sites, such as SoccerLive, may not be secure. Use them with caution to avoid potential security risks.
 
+## 🚀 Download XStream
+
+[![Download XStream](https://img.shields.io/badge/Download-XStream-blue?style=for-the-badge&logo=github)](https://github.com/SanuSanal/xstream/releases/)
+
+
 ## 🚀 Getting Started
 
 ### Flutter Setup 🛠️
@@ -68,10 +73,6 @@ Here’s a list of popular sports streaming sites you can configure in XStream:
 Feel free to add your favorite streaming sites to the list! ⚠️ Use with caution.
 
 📌 **Note**: You can configure **any** sports streaming site by simply adding its URL in the app settings.*
-
-## 📸 App Screenshots
-
-
 
 ## 💪 Contributing
 
