@@ -52,15 +52,22 @@ XStream is continuously built and tested using GitHub Actions, ensuring every co
 ## 🌐 Suggested Streaming Sites
 
 Here’s a list of popular sports streaming sites you can configure in XStream:
+   ```bash
+   https://soccerlive.app  
+   ```
+   ```bash
+   https://www.epicsports.online/
+   ```
+   ```bash
+   https://www.crictime.com
+   ```
+   ```bash
+   https://www.webcric.com
+   ```
 
-- [SoccerLive](https://soccerlive.app) (Football)
-- [Epicsports](https://www.epicsports.online/) (Football)
-- [CricTime](https://www.crictime.com) (Cricket)
-- [Webcric](https://www.webcric.com) (Cricket)
+Feel free to add your favorite streaming sites to the list! ⚠️ Use with caution.
 
-Feel free to add your favorite streaming sites to the list!
-
-*📌 **Note**: You can configure **any** sports streaming site by simply adding its URL in the app settings.*
+📌 **Note**: You can configure **any** sports streaming site by simply adding its URL in the app settings.*
 
 ## 📸 App Screenshots
 

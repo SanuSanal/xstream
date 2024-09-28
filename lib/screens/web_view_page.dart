@@ -18,6 +18,7 @@ class WebViewPage extends StatefulWidget {
 
 class WebViewPageState extends State<WebViewPage> {
   String _version = '';
+  String _homepage = getHomePageNotConfiguredWebPage();
   bool _isWebviewloaded = false;
   bool _isLoading = false;
   bool _switchModeOnFullscreen = true;
@@ -30,9 +31,9 @@ class WebViewPageState extends State<WebViewPage> {
   void initState() {
     super.initState();
     _loadVersion();
+    _refreshConfigandDomains();
     _initializeWebView();
 
-    _refreshConfigurationValues();
     final checker = UpdateChecker();
     checker.checkForUpdate(context);
   }
@@ -95,16 +96,15 @@ class WebViewPageState extends State<WebViewPage> {
       landscapeOnFullscreen = int.parse(landscapeOnFullscreenVal) == 1;
     }
 
-    String homepageUrl = getHomePageNotConfiguredWebPage();
     String? homepageConfig = await dbService.getActiveHomePageUrl();
     if (homepageConfig != null) {
-      homepageUrl = homepageConfig;
+      _homepage = homepageConfig;
     }
 
     setState(() {
       _switchModeOnFullscreen = landscapeOnFullscreen;
       if (_isWebviewloaded) {
-        _webViewController.loadRequest(Uri.parse(homepageUrl));
+        _webViewController.loadRequest(Uri.parse(_homepage));
       }
     });
   }
@@ -132,7 +132,10 @@ class WebViewPageState extends State<WebViewPage> {
   void _hideElements() async {
     String script;
     script = '''
-        document.getElementsByClassName("site-header")[0].style.display = "none";
+        var headerElements = document.getElementsByClassName("site-header");
+        if(headerElements.length > 0) {
+          headerElements[0].style.display = "none";
+        }
         let elements = document.querySelectorAll(".row.ml-1.mr-1.pt-2.mb-2");
         elements.forEach(function(element) {
             element.style.display = "none";
@@ -252,7 +255,14 @@ class WebViewPageState extends State<WebViewPage> {
               },
             );
           }),
-          title: const Text('Football Live'),
+          title: GestureDetector(
+            onTap: () {
+              if (_isWebviewloaded) {
+                _webViewController.loadRequest(Uri.parse(_homepage));
+              }
+            },
+            child: const Text('XStream'),
+          ),
           actions: _isWebviewloaded
               ? [
                   NavigationControls(webViewController: _webViewController),
@@ -273,7 +283,7 @@ class WebViewPageState extends State<WebViewPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        'Football Live',
+                        'XStream',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 24,
