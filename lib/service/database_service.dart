@@ -44,24 +44,16 @@ class DatabaseService {
   }
 
   Future<void> insertDomain(String domain) async {
-    String domainElement = '';
-    List<String> domainElements = domain.split('.');
-    if (domainElements.length < 3) {
-      domainElement = domainElements[0];
-    } else {
-      domainElement = domainElements[1];
-    }
-
     final db = await database;
 
     List<Map<String, dynamic>> existing = await db.query(
       'whitelisted_domain',
       where: 'text = ?',
-      whereArgs: [domainElement],
+      whereArgs: [domain],
     );
 
     if (existing.isEmpty) {
-      await db.insert('whitelisted_domain', {'text': domainElement});
+      await db.insert('whitelisted_domain', {'text': domain});
     }
   }
 
