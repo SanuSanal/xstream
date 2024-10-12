@@ -51,6 +51,8 @@ jobs:
           # Update the version in pubspec.yaml
           sed -i "s/^version: .*/version: $NEW_VERSION_NAME/g" $VERSION_FILE
           echo "Updated version to $NEW_VERSION_NAME"
+
+          echo "NEW_VERSION=$NEW_VERSION_NAME" >> $GITHUB_ENV
       
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -119,5 +121,5 @@ jobs:
           git config --global user.name "Sanal M"
           git config --global user.email "SanuSanal@users.noreply.github.com"
           git add pubspec.yaml
-          git commit -m "Update version to $NEW_VERSION_NAME"
+          git commit -m "Update version to ${{ env.NEW_VERSION }}"
           git push origin HEAD:main
