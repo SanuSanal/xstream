@@ -246,130 +246,132 @@ class WebViewPageState extends State<WebViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: Builder(builder: (context) {
-            return IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
-          }),
-          title: GestureDetector(
-            onTap: () {
-              if (_isWebviewloaded) {
-                _webViewController.loadRequest(Uri.parse(_homepage));
-              }
+      appBar: AppBar(
+        leading: Builder(builder: (context) {
+          return IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
             },
-            child: const Text('XStream'),
-          ),
-          actions: _isWebviewloaded
-              ? [
-                  NavigationControls(webViewController: _webViewController),
-                ]
-              : null,
-        ),
-        drawer: Builder(builder: (context) {
-          return Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                DrawerHeader(
-                  decoration: const BoxDecoration(
-                    color: Colors.blue,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'XStream',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Version $_version',
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                ListTile(
-                  title: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [Icon(Icons.settings), Text('Settings')],
-                  ),
-                  onTap: () {
-                    Scaffold.of(context).closeDrawer();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SettingsPage()),
-                    ).then((value) {
-                      _refreshConfigandDomains();
-                    });
-                  },
-                ),
-                ListTile(
-                  title: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(Icons.free_cancellation_sharp),
-                      Text('Clear browser cache')
-                    ],
-                  ),
-                  onTap: () {
-                    _onClearCache();
-                    Scaffold.of(context).closeDrawer();
-                  },
-                ),
-                ListTile(
-                  title: const Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [Icon(Icons.phone_android), Text('About app')],
-                  ),
-                  onTap: () {
-                    Scaffold.of(context).closeDrawer();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const AboutPage()),
-                    );
-                  },
-                ),
-              ],
-            ),
           );
         }),
-        body: !_isWebviewloaded
-            ? _loadingWidget()
-            : PopScope(
-                canPop: false,
-                onPopInvokedWithResult: (bool didPop, Object? result) async {
-                  if (didPop) {
-                    return;
-                  }
-                  final bool canGoBack = await _webViewController.canGoBack();
-                  if (canGoBack) {
-                    _webViewController.goBack();
-                    return;
-                  }
-                  if (context.mounted) {
-                    SystemNavigator.pop();
-                  }
-                },
-                child: Stack(
+        title: const Text('XStream'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              SystemNavigator.pop();
+            },
+          ),
+        ],
+      ),
+      drawer: Builder(builder: (context) {
+        return Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                decoration: const BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    WebViewWidget(controller: _webViewController),
-                    if (_isLoading) _loadingWidget(),
+                    const Text(
+                      'XStream',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Version $_version',
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16,
+                      ),
+                    ),
                   ],
-                )));
+                ),
+              ),
+              ListTile(
+                title: const Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [Icon(Icons.settings), Text('Settings')],
+                ),
+                onTap: () {
+                  Scaffold.of(context).closeDrawer();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SettingsPage()),
+                  ).then((value) {
+                    _refreshConfigandDomains();
+                  });
+                },
+              ),
+              ListTile(
+                title: const Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(Icons.free_cancellation_sharp),
+                    Text('Clear browser cache')
+                  ],
+                ),
+                onTap: () {
+                  _onClearCache();
+                  Scaffold.of(context).closeDrawer();
+                },
+              ),
+              ListTile(
+                title: const Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [Icon(Icons.phone_android), Text('About app')],
+                ),
+                onTap: () {
+                  Scaffold.of(context).closeDrawer();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AboutPage()),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      }),
+      body: !_isWebviewloaded
+          ? _loadingWidget()
+          : PopScope(
+              canPop: false,
+              onPopInvokedWithResult: (bool didPop, Object? result) async {
+                if (didPop) {
+                  return;
+                }
+                final bool canGoBack = await _webViewController.canGoBack();
+                if (canGoBack) {
+                  _webViewController.goBack();
+                  return;
+                }
+                if (context.mounted) {
+                  SystemNavigator.pop();
+                }
+              },
+              child: Stack(
+                children: [
+                  WebViewWidget(controller: _webViewController),
+                  if (_isLoading) _loadingWidget(),
+                ],
+              )),
+      bottomNavigationBar: _isWebviewloaded
+          ? NavigationControls(
+              webViewController: _webViewController,
+              uri: Uri.parse(_homepage),
+            )
+          : null,
+    );
   }
 }
