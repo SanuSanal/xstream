@@ -38,6 +38,11 @@ class WebViewPageState extends State<WebViewPage> {
     checker.checkForUpdate(context);
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   void _initializeWebView() {
     WebViewController controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -90,6 +95,7 @@ class WebViewPageState extends State<WebViewPage> {
 
   Future<void> _refreshConfigurationValues() async {
     bool landscapeOnFullscreen = true;
+    bool homepageChanged = false;
     String? landscapeOnFullscreenVal =
         await dbService.getConfigurationValue('landscape_on_fullscreen');
     if (landscapeOnFullscreenVal != null) {
@@ -97,13 +103,14 @@ class WebViewPageState extends State<WebViewPage> {
     }
 
     String? homepageConfig = await dbService.getActiveHomePageUrl();
-    if (homepageConfig != null) {
+    if (homepageConfig != null && _homepage != homepageConfig) {
+      homepageChanged = true;
       _homepage = homepageConfig;
     }
 
     setState(() {
       _switchModeOnFullscreen = landscapeOnFullscreen;
-      if (_isWebviewloaded) {
+      if (_isWebviewloaded && homepageChanged) {
         _webViewController.loadRequest(Uri.parse(_homepage));
       }
     });
