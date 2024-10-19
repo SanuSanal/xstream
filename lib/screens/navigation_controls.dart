@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class NavigationControls extends StatelessWidget {
@@ -27,6 +28,10 @@ class NavigationControls extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.arrow_forward),
           label: 'Forward',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.share),
+          label: 'Share',
         ),
       ],
       selectedItemColor: Colors.black,
@@ -59,6 +64,19 @@ class NavigationControls extends StatelessWidget {
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('No forward history item')),
+                );
+              }
+            }
+            break;
+          case 4:
+            String? currentUrl = await webViewController.currentUrl();
+            if (currentUrl != null && currentUrl.isNotEmpty) {
+              Share.share(
+                  "Don't miss the action! Watch the live match streaming here: $currentUrl");
+            } else {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Could not load URL.')),
                 );
               }
             }
