@@ -63,7 +63,7 @@ class WebViewPageState extends State<WebViewPage> {
             if (_switchModeOnFullscreen) {
               _injectListnerMethod();
             }
-            _hideElements();
+            _hideHeader();
           },
           onHttpError: (HttpResponseError error) {},
           onWebResourceError: (WebResourceError error) {},
@@ -89,6 +89,7 @@ class WebViewPageState extends State<WebViewPage> {
       );
     setState(() {
       _webViewController = controller;
+      _webViewController.loadRequest(Uri.parse(_homepage));
       _isWebviewloaded = true;
     });
   }
@@ -136,17 +137,15 @@ class WebViewPageState extends State<WebViewPage> {
     await _webViewController.runJavaScript(eventListnerScript);
   }
 
-  void _hideElements() async {
+  void _hideHeader() async {
     String script;
     script = '''
-        var headerElements = document.getElementsByClassName("site-header");
+        var headerElements = document.querySelectorAll("[class*='header']");
         if(headerElements.length > 0) {
-          headerElements[0].style.display = "none";
+          headers.forEach(header => {
+              header.style.display = 'none';
+          });
         }
-        let elements = document.querySelectorAll(".row.ml-1.mr-1.pt-2.mb-2");
-        elements.forEach(function(element) {
-            element.style.display = "none";
-        });
       ''';
 
     await _webViewController.runJavaScript(script);
@@ -219,7 +218,7 @@ class WebViewPageState extends State<WebViewPage> {
 
   void _saveWhitlistedDomain(String domain) async {
     _showSnackBarMessage('$domain whitelisted.');
-    await dbService.insertDomain(domain);
+    await dbService.insertDomain(domain, homePage: _homepage);
     _initializeWhiteListedDomains();
   }
 

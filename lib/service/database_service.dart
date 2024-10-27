@@ -18,6 +18,7 @@ class DatabaseService {
     final dbPath = await getDatabasesPath();
     return openDatabase(
       join(dbPath, 'data.db'),
+      version: 2,
       onCreate: (db, version) async {
         await db.execute(
           "CREATE TABLE home_page(id INTEGER PRIMARY KEY AUTOINCREMENT, url TEXT, active BOOLEAN)",
@@ -28,13 +29,24 @@ class DatabaseService {
         );
 
         await db.execute(
+          "ALTER TABLE whitelisted_domain ADD COLUMN home_page_id TEXT",
+        );
+
+        await db.execute(
           "CREATE TABLE configurations(id INTEGER PRIMARY KEY AUTOINCREMENT, key TEXT, value Text)",
         );
 
         await db.insert(
             'configurations', {'key': 'landscape_on_fullscreen', 'value': '1'});
       },
-      version: 1,
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute("DELETE FROM whitelisted_domain");
+          await db.execute(
+            "ALTER TABLE whitelisted_domain ADD COLUMN home_page_id TEXT",
+          );
+        }
+      },
     );
   }
 
@@ -43,7 +55,12 @@ class DatabaseService {
     return db.query(tableName);
   }
 
-  Future<void> insertDomain(String domain) async {
+  Future<void> insertDomain(String domain,
+      {int? homePageId, String? homePage}) async {
+    if (homePageId == null && homePage == null) {
+      throw ArgumentError('Either homePageId or homePage must be provided.');
+    }
+
     final db = await database;
 
     List<Map<String, dynamic>> existing = await db.query(
@@ -52,8 +69,15 @@ class DatabaseService {
       whereArgs: [domain],
     );
 
+    if (homePageId == null) {
+      List<Map<String, dynamic>> homePageEntity = await db.query('home_page',
+          columns: ['id'], where: 'url = ?', whereArgs: [homePage]);
+      homePageId = homePageEntity[0]['id'];
+    }
+
     if (existing.isEmpty) {
-      await db.insert('whitelisted_domain', {'text': domain});
+      await db.insert(
+          'whitelisted_domain', {'text': domain, 'home_page_id': homePageId});
     }
   }
 
@@ -70,8 +94,8 @@ class DatabaseService {
       Uri uri = Uri.parse(url);
       String domain = uri.host;
 
-      await db.insert('home_page', {'url': url, 'active': 0});
-      await insertDomain(domain);
+      int id = await db.insert('home_page', {'url': url, 'active': 0});
+      await insertDomain(domain, homePageId: id);
     }
   }
 
@@ -82,6 +106,8 @@ class DatabaseService {
 
   Future<void> deleteStreamSite(int id) async {
     final db = await database;
+    await db.delete('whitelisted_domain',
+        where: 'home_page_id = ?', whereArgs: [id]);
     await db.delete('home_page', where: 'id = ?', whereArgs: [id]);
   }
 

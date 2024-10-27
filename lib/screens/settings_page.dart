@@ -14,6 +14,7 @@ class SettingsPageState extends State<SettingsPage> {
   List<Configuration> _configurations = [];
   List<Map<String, dynamic>> _whitelistedDomains = [];
   List<Map<String, dynamic>> _homePages = [];
+  int? _selectedIndex;
 
   @override
   void initState() {
@@ -150,6 +151,63 @@ class SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  Widget _getWhitelistedDomainsForSite(int homePageId) {
+    var domains = _whitelistedDomains
+        .where((domain) => int.parse(domain['home_page_id']) == homePageId)
+        .toList();
+
+    return Column(
+      children: [
+        const SizedBox(height: 15.0),
+        if (domains.isNotEmpty)
+          const Text(
+            "Whitelisted Domains",
+            style: TextStyle(decoration: TextDecoration.underline),
+          ),
+        domains.isEmpty
+            ? const Center(child: Text('No whitelisted domains available'))
+            : ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: domains.length,
+                itemBuilder: (context, index) {
+                  final domainItem = domains[index];
+                  final id = domainItem['id'];
+                  final text = domainItem['text'];
+
+                  return Container(
+                    margin: const EdgeInsets.only(left: 13),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 5.0, horizontal: 0.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(0.0),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            text,
+                            style: const TextStyle(fontSize: 16.0),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            _showSnackBarMessage(context, '$text deleted.');
+                            _deleteDomain(id);
+                          },
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -243,100 +301,69 @@ class SettingsPageState extends State<SettingsPage> {
                       final id = streamItem['id'];
                       final url = streamItem['url'];
                       final bool isActive = streamItem['active'] as int == 1;
+                      final bool isExpanded = _selectedIndex == index;
 
                       return Container(
                         margin: const EdgeInsets.symmetric(
                             vertical: 4.0, horizontal: 16.0),
                         padding: const EdgeInsets.symmetric(
-                            vertical: 12.0, horizontal: 16.0),
+                            vertical: 12.0, horizontal: 0.0),
                         decoration: BoxDecoration(
                           color: Colors.grey[200],
                           borderRadius: BorderRadius.circular(8.0),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: Column(
                           children: [
-                            Expanded(
-                              child: Text(
-                                url,
-                                style: const TextStyle(fontSize: 16.0),
-                              ),
-                            ),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 IconButton(
                                   icon: Icon(
-                                    Icons.check_circle_rounded,
-                                    color: isActive ? Colors.blue : Colors.grey,
+                                    isExpanded
+                                        ? Icons.keyboard_arrow_down
+                                        : Icons.keyboard_arrow_right,
                                   ),
                                   onPressed: () {
-                                    _showSnackBarMessage(
-                                        context, '$url activated.');
-                                    _activateStreamSite(id);
+                                    setState(() {
+                                      _selectedIndex =
+                                          isExpanded ? null : index;
+                                    });
                                   },
                                 ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () {
-                                    _showSnackBarMessage(
-                                        context, '$url deleted.');
-                                    _deleteStreamSite(id);
-                                  },
+                                Expanded(
+                                  child: Text(
+                                    url,
+                                    style: const TextStyle(fontSize: 16.0),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.check_circle_rounded,
+                                        color: isActive
+                                            ? Colors.blue
+                                            : Colors.grey,
+                                      ),
+                                      onPressed: () {
+                                        _showSnackBarMessage(
+                                            context, '$url activated.');
+                                        _activateStreamSite(id);
+                                      },
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () {
+                                        _showSnackBarMessage(
+                                            context, '$url deleted.');
+                                        _deleteStreamSite(id);
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-
-            const SizedBox(height: 24.0),
-
-            // Whitelisted domains section
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'Whitelisted domains',
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-              ),
-            ),
-            _whitelistedDomains.isEmpty
-                ? const Center(child: Text('No whitelisted domains available'))
-                : ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _whitelistedDomains.length,
-                    itemBuilder: (context, index) {
-                      final domainItem = _whitelistedDomains[index];
-                      final id = domainItem['id'];
-                      final text = domainItem['text'];
-
-                      return Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 4.0, horizontal: 16.0),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 12.0, horizontal: 16.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                text,
-                                style: const TextStyle(fontSize: 16.0),
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                _showSnackBarMessage(context, '$text deleted.');
-                                _deleteDomain(id);
-                              },
-                            ),
+                            if (isExpanded) _getWhitelistedDomainsForSite(id)
                           ],
                         ),
                       );
@@ -368,6 +395,7 @@ class SettingsPageState extends State<SettingsPage> {
     await dbService.deleteStreamSite(id);
     setState(() {
       _refreshSiteList();
+      _refreshDomainList();
     });
   }
 

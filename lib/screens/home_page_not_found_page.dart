@@ -14,12 +14,11 @@ const String homePageNotConfigured = '''
       color: #333;
       margin: 0;
       padding: 20px;
-      height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      text-align: center; /* Center text for overall layout */
+      text-align: center; 
     }
     .content {
       max-width: 600px;
@@ -54,8 +53,8 @@ const String homePageNotConfigured = '''
       margin: 0 5px;
     }
     .error-image {
-      width: 100px; /* Specify width */
-      height: auto; /* Maintain aspect ratio */
+      width: 100px;
+      height: auto;
       margin-bottom: 20px;
     }
   </style>
@@ -76,6 +75,9 @@ const String homePageNotConfigured = '''
     </div>
     <div class="step">
       <span>3. Add a stream site by tapping the <strong>+</strong> button.</span>
+    </div>
+    <div class="step">
+      <span>4. Tap on<img src="https://img.icons8.com/material-sharp/24/checked--v1.png" alt="Checkmark Icon"/> to set the stream site as home page.</span>
     </div>
 
     <p>Your chosen stream site will be displayed here once it’s set.</p>
