@@ -6,42 +6,180 @@
     <title>XStream - Seamless Sports Streaming</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
         .container {
             margin-top: 50px;
         }
         .app-logo {
-            max-width: 150px;
+            max-width: 180px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        .app-details {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .app-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .app-header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .app-header p {
+            font-size: 1.2rem;
+            color: #555;
+        }
+        .app-details, .suggestions, .how-to-use {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        .app-details ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .app-details ul li {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
         }
         .download-btn {
+            font-size: 1.2rem;
+            padding: 10px 20px;
             margin-top: 20px;
+        }
+        .suggestions ul {
+            padding-left: 0;
+            list-style-type: none;
+        }
+        .suggestions li {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        .suggestions code {
+            background-color: #e9ecef;
+            padding: 3px 6px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+        .copy-btn {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .how-to-use ol {
+            padding-left: 20px;
+        }
+        .how-to-use li {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .how-to-use img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
+        .screenshot {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .screenshot img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .footer {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #777;
+            margin-top: 30px;
+            padding: 20px 0;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
+        <!-- App Header -->
+        <div class="app-header">
+            <h1>🎥 XStream - Seamless Sports Streaming App! 🏆</h1>
+            <p>Your go-to solution for uninterrupted sports streaming across multiple sites.</p>
+        </div>
+
+        <!-- App Details Section -->
         <div class="row app-details">
-            <div class="col-md-4">
+            <div class="col-md-4 text-center">
                 <img src="image/image.png" alt="XStream Logo" class="app-logo">
             </div>
             <div class="col-md-8">
-                <h1>🎥 XStream - Seamless Sports Streaming App! 🏆</h1>
-                <p>Welcome to <strong>XStream</strong>, the ultimate solution for hassle-free sports streaming! Whether it's football, cricket, or any other sport, XStream lets you enjoy live matches from your favorite streaming sites, without interruptions from popups and unwanted redirects.</p>
+                <p>Welcome to <strong>XStream</strong>, the ultimate app for hassle-free sports streaming. Whether you're into football, cricket, or any other sport, XStream gives you a smooth experience without annoying popups or redirects.</p>
                 <ul>
                     <li>📱 Customizable Streaming Experience</li>
-                    <li>🚫 Block Unwanted Popups & Redirects</li>
+                    <li>🚫 Blocks Unwanted Popups & Redirects</li>
                     <li>⚽ Multi-Sport Compatibility</li>
                 </ul>
                 <a href="https://github.com/SanuSanal/xstream/releases/" class="btn btn-primary download-btn">Download XStream</a>
             </div>
         </div>
+
+        <!-- Suggested Streaming Sites Section -->
+        <div class="suggestions">
+            <h3>Suggested Streaming Sites</h3>
+            <p>Copy any of the following links and paste them directly into the app for a seamless experience:</p>
+            <ul>
+                <li>🌐<code id="link1">https://soccerlive.app<button class="copy-btn" onclick="copyToClipboard('link1')"><img width="20" height="20" src="https://img.icons8.com/fluency-systems-regular/50/copy--v1.png" alt="copy--v1"/></button></code>
+                </li>
+                <li>🌐 <code id="link2">https://www.epicsports.online/<button class="copy-btn" onclick="copyToClipboard('link2')"><img width="20" height="20" src="https://img.icons8.com/fluency-systems-regular/50/copy--v1.png" alt="copy--v1"/></button></code>
+                   
+                </li>
+                <li>🌐 <code id="link3">https://www.crictime.com<button class="copy-btn" onclick="copyToClipboard('link3')"><img width="20" height="20" src="https://img.icons8.com/fluency-systems-regular/50/copy--v1.png" alt="copy--v1"/></button></code>
+                    
+                </li>
+                <li>🌐 <code id="link4">https://www.webcric.com<button class="copy-btn" onclick="copyToClipboard('link4')"><img width="20" height="20" src="https://img.icons8.com/fluency-systems-regular/50/copy--v1.png" alt="copy--v1"/></button></code>
+                    
+                </li>
+            </ul>
+        </div>
+
+        <!-- How to Use the App Section -->
+        <div class="how-to-use">
+            <h3>How to Use XStream</h3>
+            <ol>
+                <li><img src="https://img.icons8.com/ios-filled/50/000000/menu.png" alt="Drawer Icon"> Open the <strong>App Drawer</strong> from the top left corner.</li>
+                <li><img src="https://img.icons8.com/ios-filled/50/000000/settings.png" alt="Settings Icon"> Navigate to <strong>Settings</strong> to configure your homepage.</li>
+                <li><img src="https://img.icons8.com/ios-filled/50/plus-math.png" alt="Plus Icon"> Add a stream site by tapping the plus button.</li>
+                <li><img src="https://img.icons8.com/material-sharp/24/checked--v1.png" alt="Checkmark Icon"> Tap on the checkmark to set the stream site as homepage.</li>
+            </ol>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2024 XStream. All Rights Reserved.</p>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function copyToClipboard(id) {
+            const text = document.getElementById(id).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Copied to clipboard!");
+            }).catch(err => {
+                console.error("Failed to copy: ", err);
+            });
+        }
+    </script>
 </body>
 </html>

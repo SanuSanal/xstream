@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:xstream/screens/about_page.dart';
 import 'package:xstream/screens/home_page_not_found_page.dart';
+import 'package:xstream/screens/match_schedule_page.dart';
 import 'package:xstream/screens/navigation_controls.dart';
 import 'package:xstream/screens/settings_page.dart';
 import 'package:xstream/service/database_service.dart';
@@ -264,6 +266,16 @@ class WebViewPageState extends State<WebViewPage> {
         title: const Text('XStream'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.calendar_month),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const MatchSchedulePage()),
+              );
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
               SystemNavigator.pop();
@@ -317,6 +329,29 @@ class WebViewPageState extends State<WebViewPage> {
                   ).then((value) {
                     _refreshConfigandDomains();
                   });
+                },
+              ),
+              ListTile(
+                title: const Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [Icon(Icons.help_outline_sharp), Text('Help')],
+                ),
+                onTap: () async {
+                  Scaffold.of(context).closeDrawer();
+
+                  final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+                  String repoUrl = 'https://sanusanal.github.io/xstream/';
+                  Uri url = Uri.parse(repoUrl);
+                  if (await canLaunchUrl(url)) {
+                    launchUrl(url);
+                  } else {
+                    Clipboard.setData(ClipboardData(text: repoUrl));
+                    scaffoldMessenger.showSnackBar(
+                      const SnackBar(
+                          content: Text('Repository copied to clipboard')),
+                    );
+                  }
                 },
               ),
               ListTile(

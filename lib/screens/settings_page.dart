@@ -277,7 +277,7 @@ class SettingsPageState extends State<SettingsPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'Stream sites',
+                    'Streaming sites',
                     style:
                         TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                   ),
