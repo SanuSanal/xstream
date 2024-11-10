@@ -96,6 +96,7 @@ class DatabaseService {
 
       int id = await db.insert('home_page', {'url': url, 'active': 0});
       await insertDomain(domain, homePageId: id);
+      await setActiveStreamSite(id);
     }
   }
 

@@ -91,14 +91,13 @@ class WebViewPageState extends State<WebViewPage> {
       );
     setState(() {
       _webViewController = controller;
-      _webViewController.loadRequest(Uri.parse(_homepage));
+      // _webViewController.loadRequest(Uri.parse(_homepage));
       _isWebviewloaded = true;
     });
   }
 
   Future<void> _refreshConfigurationValues() async {
     bool landscapeOnFullscreen = true;
-    bool homepageChanged = false;
     String? landscapeOnFullscreenVal =
         await dbService.getConfigurationValue('landscape_on_fullscreen');
     if (landscapeOnFullscreenVal != null) {
@@ -106,14 +105,17 @@ class WebViewPageState extends State<WebViewPage> {
     }
 
     String? homepageConfig = await dbService.getActiveHomePageUrl();
-    if (homepageConfig != null && _homepage != homepageConfig) {
-      homepageChanged = true;
+    if (homepageConfig != null &&
+        homepageConfig != '' &&
+        _homepage != homepageConfig) {
       _homepage = homepageConfig;
+    } else {
+      _homepage = getHomePageNotConfiguredWebPage();
     }
 
     setState(() {
       _switchModeOnFullscreen = landscapeOnFullscreen;
-      if (_isWebviewloaded && homepageChanged) {
+      if (_isWebviewloaded) {
         _webViewController.loadRequest(Uri.parse(_homepage));
       }
     });
