@@ -77,8 +77,7 @@ class WebViewPageState extends State<WebViewPage> {
               return NavigationDecision.navigate;
             }
 
-            _showSnackBarMessage('$domain Blocked.',
-                showSaveButton: true, domain: domain);
+            _showSnackBarMessage('$domain Blocked.', url: uri);
             return NavigationDecision.prevent;
           },
         ),
@@ -155,28 +154,27 @@ class WebViewPageState extends State<WebViewPage> {
     await _webViewController.runJavaScript(script);
   }
 
-  void _showSnackBarMessage(String message,
-      {bool showSaveButton = false, String domain = ''}) {
+  void _showSnackBarMessage(String message, {Uri? url}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(message),
-            if (showSaveButton)
+            if (url != null)
               Tooltip(
-                message: 'Whitelist $domain.',
+                message: 'Whitelist ${url.host}.',
                 child: IconButton(
                   icon: const Icon(Icons.save),
                   onPressed: () {
-                    _saveWhitlistedDomain(domain);
+                    _saveWhitlistedDomain(url);
                   },
                   color: Colors.white,
                 ),
               )
           ],
         ),
-        duration: showSaveButton ? const Duration(seconds: 2) : Durations.long2,
+        duration: url != null ? const Duration(seconds: 2) : Durations.long2,
       ),
     );
   }
@@ -220,10 +218,11 @@ class WebViewPageState extends State<WebViewPage> {
     });
   }
 
-  void _saveWhitlistedDomain(String domain) async {
-    _showSnackBarMessage('$domain whitelisted.');
-    await dbService.insertDomain(domain, homePage: _homepage);
-    _initializeWhiteListedDomains();
+  void _saveWhitlistedDomain(Uri uri) async {
+    _showSnackBarMessage('${uri.host} whitelisted.');
+    await dbService.insertDomain(uri.host, homePage: _homepage);
+    await _initializeWhiteListedDomains();
+    _webViewController.loadRequest(uri);
   }
 
   Widget _loadingWidget() {

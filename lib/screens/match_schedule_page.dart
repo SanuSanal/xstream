@@ -177,7 +177,8 @@ class MatchCard extends StatelessWidget {
 
     if (match.info.contains('LIVE') ||
         match.info.contains('FT') ||
-        match.info.contains('HT')) {
+        match.info.contains('HT') ||
+        match.info.contains('AET')) {
       firstPart = match.info.split('#')[0];
       secondPart = match.info.split('#')[1];
     } else if (match.info.isNotEmpty) {
@@ -202,8 +203,10 @@ class MatchCard extends StatelessWidget {
             children: [
               Flexible(
                   flex: 3,
-                  child: _buildTeam(match.homeTeam, match.homeLogoUrl,
-                      MainAxisAlignment.start)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: _buildTeam(match.homeTeam, match.homeLogoUrl, true),
+                  )),
               Flexible(
                 flex: 1,
                 child: Column(
@@ -221,8 +224,10 @@ class MatchCard extends StatelessWidget {
               ),
               Flexible(
                   flex: 3,
-                  child: _buildTeam(match.awayTeam, match.awayLogoUrl,
-                      MainAxisAlignment.end)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: _buildTeam(match.awayTeam, match.awayLogoUrl, false),
+                  )),
             ],
           ),
         ],
@@ -230,28 +235,30 @@ class MatchCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTeam(
-      String teamName, String logoUrl, MainAxisAlignment alignment) {
+  Widget _buildTeam(String teamName, String logoUrl, bool isHome) {
+    var image = Image.network(
+      logoUrl,
+      width: 30,
+      height: 30,
+      errorBuilder: (context, error, stackTrace) {
+        return const Icon(Icons.error, color: Colors.red, size: 30);
+      },
+    );
+    var teamNameLabel = Flexible(
+      child: Text(
+        teamName,
+        style: const TextStyle(color: Colors.black, fontSize: 14),
+        overflow: TextOverflow.visible,
+        maxLines: 2,
+      ),
+    );
     return Row(
-      mainAxisAlignment: alignment,
+      mainAxisAlignment:
+          isHome ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
-        Image.network(
-          logoUrl,
-          width: 30,
-          height: 30,
-          errorBuilder: (context, error, stackTrace) {
-            return const Icon(Icons.error, color: Colors.red, size: 30);
-          },
-        ),
+        isHome ? teamNameLabel : image,
         const SizedBox(width: 8),
-        Flexible(
-          child: Text(
-            teamName,
-            style: const TextStyle(color: Colors.black, fontSize: 14),
-            overflow: TextOverflow.visible,
-            maxLines: 2,
-          ),
-        ),
+        isHome ? image : teamNameLabel,
       ],
     );
   }
