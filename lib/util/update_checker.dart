@@ -59,7 +59,7 @@ class UpdateChecker {
     final currentVersion = packageInfo.version;
 
     // if (_hasNewerVersion(currentVersion, latestVersion) && context.mounted) {
-    if (_hasNewerVersion(currentVersion, latestVersion) && context.mounted) {
+    if (context.mounted) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
