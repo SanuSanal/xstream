@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -24,7 +25,8 @@ class AppUpdateWidgetState extends State<AppUpdateWidget> {
 
   bool _isDownloading = false;
   double _progress = 0.0;
-  late UpdateCheckerData versionData;
+  String _downloadUrl = "";
+  String _latestVersion = "";
 
   @override
   void initState() {
@@ -36,9 +38,27 @@ class AppUpdateWidgetState extends State<AppUpdateWidget> {
     final packageInfo = await PackageInfo.fromPlatform();
     final currentVersion = packageInfo.version;
 
-    versionData = await _getLatestReleaseVersion();
+    UpdateCheckerData versionData = await _getLatestReleaseVersion();
 
-    if (_hasNewerVersion(currentVersion, versionData.version)) {
+    final deviceInfo = DeviceInfoPlugin();
+    final androidInfo = await deviceInfo.androidInfo;
+
+    final abis = androidInfo.supportedAbis;
+
+    if (abis.isNotEmpty) {
+      var abi = abis.first;
+      if ("arm64-v8a" == abi) {
+        _downloadUrl = versionData.v8aDownloadUrl;
+      } else if ("armeabi-v7a" == abi) {
+        _downloadUrl = versionData.v7aDownloadUrl;
+      } else {
+        _downloadUrl = versionData.x86DownloadUrl;
+      }
+    }
+
+    if (_hasNewerVersion(currentVersion, versionData.version) &&
+        _downloadUrl.isNotEmpty) {
+      _latestVersion = versionData.version;
       _showConfirmationDialog();
     }
   }
@@ -49,7 +69,7 @@ class AppUpdateWidgetState extends State<AppUpdateWidget> {
       final apkPath = '${directory.path}/update.apk';
 
       await _dio.download(
-        versionData.v8aDownloadUrl,
+        _downloadUrl,
         apkPath,
         onReceiveProgress: (received, total) {
           setState(() {
@@ -90,7 +110,7 @@ class AppUpdateWidgetState extends State<AppUpdateWidget> {
       builder: (context) => AlertDialog(
         title: const Text('Confirm Update'),
         content: Text(
-            'A new version ${versionData.version} is available. Would you like to update?'),
+            'A new version $_latestVersion is available. Would you like to update?'),
         actions: [
           TextButton(
             onPressed: () {
