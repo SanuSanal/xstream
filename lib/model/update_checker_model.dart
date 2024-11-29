@@ -10,4 +10,12 @@ class UpdateCheckerData {
     required this.v7aDownloadUrl,
     required this.x86DownloadUrl,
   });
+
+  static UpdateCheckerData empty() {
+    return UpdateCheckerData(
+        version: "",
+        v8aDownloadUrl: "",
+        v7aDownloadUrl: "",
+        x86DownloadUrl: "");
+  }
 }

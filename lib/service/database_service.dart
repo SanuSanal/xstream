@@ -18,7 +18,7 @@ class DatabaseService {
     final dbPath = await getDatabasesPath();
     return openDatabase(
       join(dbPath, 'data.db'),
-      version: 2,
+      version: 3,
       onCreate: (db, version) async {
         await db.execute(
           "CREATE TABLE home_page(id INTEGER PRIMARY KEY AUTOINCREMENT, url TEXT, active BOOLEAN)",
@@ -45,6 +45,10 @@ class DatabaseService {
           await db.execute(
             "ALTER TABLE whitelisted_domain ADD COLUMN home_page_id TEXT",
           );
+        }
+        if (oldVersion < 3) {
+          await db
+              .insert('configurations', {'key': 'auto_update', 'value': '1'});
         }
       },
     );

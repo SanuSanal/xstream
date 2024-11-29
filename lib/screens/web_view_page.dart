@@ -7,7 +7,7 @@ import 'package:xstream/screens/match_schedule_page.dart';
 import 'package:xstream/screens/navigation_controls.dart';
 import 'package:xstream/screens/settings_page.dart';
 import 'package:xstream/service/database_service.dart';
-import 'package:xstream/util/update_checker.dart';
+import 'package:xstream/util/app_update_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -20,10 +20,11 @@ class WebViewPage extends StatefulWidget {
 
 class WebViewPageState extends State<WebViewPage> {
   String _version = '';
-  String _homepage = getHomePageNotConfiguredWebPage();
+  String _homepage = "";
   bool _isWebviewloaded = false;
   bool _isLoading = false;
   bool _switchModeOnFullscreen = true;
+  bool _initiateUpdateCheck = false;
   List<String> whiteListedDomains = [];
 
   final dbService = DatabaseService();
@@ -36,13 +37,22 @@ class WebViewPageState extends State<WebViewPage> {
     _refreshConfigandDomains();
     _initializeWebView();
 
-    final checker = UpdateChecker();
-    checker.checkForUpdate(context);
+    _checkForUpdates();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> _checkForUpdates() async {
+    String? checkUpdates = await dbService.getConfigurationValue('auto_update');
+
+    if (checkUpdates != null && int.parse(checkUpdates) == 1 && mounted) {
+      setState(() {
+        _initiateUpdateCheck = true;
+      });
+    }
   }
 
   void _initializeWebView() {
@@ -108,15 +118,22 @@ class WebViewPageState extends State<WebViewPage> {
         homepageConfig != '' &&
         _homepage != homepageConfig) {
       _homepage = homepageConfig;
-    } else {
+      setState(() {
+        if (_isWebviewloaded) {
+          _webViewController.loadRequest(Uri.parse(_homepage));
+        }
+      });
+    } else if (homepageConfig == null || homepageConfig == '') {
       _homepage = getHomePageNotConfiguredWebPage();
+      setState(() {
+        if (_isWebviewloaded) {
+          _webViewController.loadRequest(Uri.parse(_homepage));
+        }
+      });
     }
 
     setState(() {
       _switchModeOnFullscreen = landscapeOnFullscreen;
-      if (_isWebviewloaded) {
-        _webViewController.loadRequest(Uri.parse(_homepage));
-      }
     });
   }
 
@@ -406,6 +423,13 @@ class WebViewPageState extends State<WebViewPage> {
                 children: [
                   WebViewWidget(controller: _webViewController),
                   if (_isLoading) _loadingWidget(),
+                  if (_initiateUpdateCheck)
+                    AppUpdateWidget(onUpdateComplete: () {
+                      // Handle update completion
+                      setState(() {
+                        _initiateUpdateCheck = false;
+                      });
+                    })
                 ],
               )),
       bottomNavigationBar: _isWebviewloaded

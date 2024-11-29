@@ -262,6 +262,39 @@ class SettingsPageState extends State<SettingsPage> {
                               ],
                             ),
                           );
+                        case 'auto_update':
+                          return Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 4.0, horizontal: 16.0),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12.0, horizontal: 16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Expanded(
+                                  child: Text(
+                                    'Auto-check updates',
+                                    style: TextStyle(fontSize: 16.0),
+                                  ),
+                                ),
+                                Switch(
+                                  value: int.parse(_getConfigurationValue(
+                                          'auto_update')) ==
+                                      1,
+                                  onChanged: (bool value) {
+                                    _showSnackBarMessage(
+                                        context, 'Configuration updated.');
+                                    _updateConfigurationValue(
+                                        'auto_update', value ? 1 : 0);
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
                         default:
                           return const Center(
                             child: Text('X'),
@@ -401,10 +434,7 @@ class SettingsPageState extends State<SettingsPage> {
 
   String _getConfigurationValue(String s) {
     if (_configurations.isNotEmpty) {
-      return _configurations
-          .where((c) => c.key == 'landscape_on_fullscreen')
-          .first
-          .value;
+      return _configurations.where((c) => c.key == s).first.value;
     }
     return '';
   }
