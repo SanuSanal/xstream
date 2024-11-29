@@ -40,12 +40,6 @@ class AppUpdateWidgetState extends State<AppUpdateWidget> {
 
     if (_hasNewerVersion(currentVersion, versionData.version)) {
       _showConfirmationDialog();
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No updates available.')),
-        );
-      }
     }
   }
 
