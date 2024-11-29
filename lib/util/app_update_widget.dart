@@ -38,8 +38,7 @@ class AppUpdateWidgetState extends State<AppUpdateWidget> {
 
     versionData = await _getLatestReleaseVersion();
 
-    // if (_hasNewerVersion(currentVersion, versionData.version)) {
-    if (true) {
+    if (_hasNewerVersion(currentVersion, versionData.version)) {
       _showConfirmationDialog();
     } else {
       if (mounted) {
