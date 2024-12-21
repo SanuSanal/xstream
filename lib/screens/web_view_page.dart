@@ -284,6 +284,13 @@ class WebViewPageState extends State<WebViewPage> {
         title: const Text('XStream'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.screen_rotation_sharp),
+            onPressed: () {
+              final orientation = MediaQuery.of(context).orientation;
+              _toggleOrientation(orientation == Orientation.portrait);
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.calendar_month),
             onPressed: () {
               Navigator.push(
