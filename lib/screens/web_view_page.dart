@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:xstream/screens/about_page.dart';
+import 'package:xstream/screens/donate_page.dart';
 import 'package:xstream/screens/home_page_not_found_page.dart';
 import 'package:xstream/screens/match_schedule_page.dart';
 import 'package:xstream/screens/navigation_controls.dart';
@@ -431,12 +432,15 @@ class WebViewPageState extends State<WebViewPage> {
                   WebViewWidget(controller: _webViewController),
                   if (_isLoading) _loadingWidget(),
                   if (_initiateUpdateCheck)
-                    AppUpdateWidget(onUpdateComplete: () {
-                      // Handle update completion
-                      setState(() {
-                        _initiateUpdateCheck = false;
-                      });
-                    })
+                    AppUpdateWidget(
+                      onUpdateComplete: () {
+                        // Handle update completion
+                        setState(() {
+                          _initiateUpdateCheck = false;
+                        });
+                      },
+                    ),
+                  const DonatePage(),
                 ],
               )),
       bottomNavigationBar: _isWebviewloaded
