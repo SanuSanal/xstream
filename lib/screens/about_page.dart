@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_donation_buttons/donationButtons/ko-fiButton.dart';
+import 'package:flutter_donation_buttons/donationButtons/paypalButton.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -96,39 +96,53 @@ class AboutPage extends StatelessWidget {
               style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
             ),
             const SizedBox(height: 20),
-            Center(
-              child: ElevatedButton.icon(
-                onPressed: () async {
-                  final scaffoldMessenger = ScaffoldMessenger.of(context);
-
-                  String repoUrl = 'https://github.com/SanuSanal/xstream';
-                  Uri url = Uri.parse(repoUrl);
-                  if (await canLaunchUrl(url)) {
-                    launchUrl(url);
-                  } else {
-                    Clipboard.setData(ClipboardData(text: repoUrl));
-                    scaffoldMessenger.showSnackBar(
-                      const SnackBar(
-                          content: Text('Repository copied to clipboard')),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 15,
-                  ),
-                ),
-                icon: const Icon(Icons.link),
-                label: const Text(
-                  'GitHub Repository',
-                  style: TextStyle(fontSize: 16),
-                ),
+            const Text(
+              'Like my work?',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
+            ),
+            const SizedBox(height: 8),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: KofiButton(
+                        kofiName: "sanalm",
+                        text: "Buy me a ko-fi",
+                        kofiColor: KofiColor.Orange,
+                        style: ButtonStyle(
+                          shape:
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: PayPalButton(
+                        paypalButtonId: "HBGNBZL5VRMTY",
+                        donationText: "Support Me!",
+                        color: Colors.white10,
+                        style: ButtonStyle(
+                          shape:
+                              WidgetStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
