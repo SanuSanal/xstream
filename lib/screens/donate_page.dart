@@ -13,7 +13,7 @@ class DonatePage extends StatefulWidget {
 }
 
 class DonatePageState extends State<DonatePage> {
-  bool _showDialog = true;
+  bool _showDialog = false;
 
   @override
   void initState() {
