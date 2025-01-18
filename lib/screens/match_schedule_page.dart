@@ -38,14 +38,14 @@ class MatchSchedulePageState extends State<MatchSchedulePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title:
-            const Text('Match Schedule', style: TextStyle(color: Colors.black)),
+            const Text("Today's Action", style: TextStyle(color: Colors.black)),
       ),
-      body: Column(
-        children: [
-          _buildDateButtons(),
-          _loading
-              ? _loadingWidget()
-              : Expanded(
+      body: _loading
+          ? _loadingWidget()
+          : Column(
+              children: [
+                // _buildDateButtons(),
+                Expanded(
                   child: _tournaments.isEmpty
                       ? const Text('No Matches Scheduled')
                       : ListView.builder(
@@ -59,8 +59,8 @@ class MatchSchedulePageState extends State<MatchSchedulePage> {
                                 matches: tournament.matches);
                           }),
                 ),
-        ],
-      ),
+              ],
+            ),
     );
   }
 

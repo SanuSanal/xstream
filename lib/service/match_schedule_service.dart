@@ -7,7 +7,7 @@ import 'package:xstream/model/match_data.dart';
 Future<List<LeagueDetails>> fetchLeagueSchedule(String day) async {
   List<LeagueDetails> responseDetails = [];
 
-  final url = 'https://soccerlive.app/loadEventsDate?date=$day';
+  const url = 'https://soccerlive.app';
   final response = await http.get(Uri.parse(url));
 
   if (response.statusCode == 200) {
