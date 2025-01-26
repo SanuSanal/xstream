@@ -1,12 +1,33 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_donation_buttons/donationButtons/ko-fiButton.dart';
 import 'package:flutter_donation_buttons/donationButtons/paypalButton.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final defaultTextStyle =
+        Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 18);
+
+    Uri contactUrl = Uri.parse('https://devlog-notes.web.app/#/contact');
+
+    void lauchSupportPage() async {
+      if (await canLaunchUrl(contactUrl)) {
+        await launchUrl(contactUrl);
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Could not launch the support page!'),
+            ),
+          );
+        }
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('XStream'),
@@ -25,43 +46,7 @@ class AboutPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text(
-              'Welcome to XStream, the ultimate app for seamless sports streaming! Whether you\'re a football fanatic or a cricket lover, XStream lets you stream live games from various sports sites, completely hassle-free.',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              'What We Offer:',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              '- Customizable Streaming: Add your favorite sports streaming sites, such as [SoccerLive](https://soccerlive.app/) or [CricTime](https://www.crictime.com), and stream live games without interruptions.',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              '- Ad and Popup Blocking: Enjoy a clean, smooth experience as XStream blocks unwanted ads, popups, and redirects that usually clutter your stream.',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              '- Multi-Sport Support: XStream is compatible with any sport. Configure the app for football, cricket, or any other streaming site you choose!',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 24),
-            const Text(
-              '⚠️ Note:',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'While XStream offers a smooth streaming experience, some streaming sites, like SoccerLive or CricTime, may not be secure. Use them with caution to avoid potential risks.',
+              'Welcome to XStream, the ultimate app for seamless video streaming! Whether you\'re a football fanatic or a movie lover, XStream lets you stream live from various sites, completely hassle-free.',
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 24),
@@ -74,7 +59,43 @@ class AboutPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              'Download the app, add your favorite streaming site, and start watching live sports instantly without the usual interruptions!',
+              'Download the app, add your favorite streaming site, and start watching video contents instantly without the usual interruptions!',
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              'What We Offer:',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              '- Customizable Streaming: Add your favorite streaming sites and stream contents without interruptions.',
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              '- Ad and Popup Blocking: Enjoy a clean, smooth experience as XStream blocks unwanted ads, popups, and redirects that usually clutter your stream.',
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              '- Multi-Category Support: XStream is compatible with any category. Configure the app for sports, entertainment, or any other streaming site you choose!',
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 24),
+            const Text(
+              '⚠️ Note:',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'While XStream offers a smooth streaming experience, some streaming sites that you are linkely to use may not be secure. Use them with caution to avoid potential risks.',
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 24),
@@ -86,9 +107,30 @@ class AboutPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'We\'re constantly improving XStream to make your sports streaming experience even better. If you encounter any issues or have suggestions, please reach out to us or contribute via GitHub. Your feedback is always appreciated!',
-              style: TextStyle(fontSize: 16),
+            RichText(
+              text: TextSpan(
+                style: defaultTextStyle,
+                children: [
+                  const TextSpan(
+                    text:
+                        'We\'re constantly improving XStream to make your streaming experience even better. If you encounter any issues or have suggestions, please ',
+                  ),
+                  TextSpan(
+                    text: 'reach out to us',
+                    style: const TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        lauchSupportPage();
+                      },
+                  ),
+                  const TextSpan(
+                    text: '. Your feedback is always appreciated!',
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 24),
             const Text(
