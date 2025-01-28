@@ -12,7 +12,7 @@ class AboutPage extends StatelessWidget {
     final defaultTextStyle =
         Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 18);
 
-    Uri contactUrl = Uri.parse('https://devlog-notes.web.app/#/contact');
+    Uri contactUrl = Uri.parse('https://xstream--app.web.app/');
 
     void lauchSupportPage() async {
       if (await canLaunchUrl(contactUrl)) {
