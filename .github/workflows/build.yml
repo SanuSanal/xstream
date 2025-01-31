@@ -83,8 +83,24 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
-          flutter build apk --release --split-per-abi      
+          flutter build apk --release --split-per-abi
     
+      - name: Move APKs to docs/assets/
+        run: |
+          mkdir -p docs/assets
+          rm -rf docs/assets/apks/*
+          mv build/app/outputs/apk/release/*-v7a-*.apk docs/assets/apks/xstream-armeabi-v7a-release.apk
+          mv build/app/outputs/apk/release/*-v8a-*.apk docs/assets/apks/xstream-arm64-v8a-release.apk
+          mv build/app/outputs/apk/release/*-x86_64-*.apk docs/assets/apks/xstream-x86_64-release.apk
+        
+      - name: Commit APKs to docs/assets/
+        run: |
+          git config --global user.name "Sanal M"
+          git config --global user.email "SanuSanal@users.noreply.github.com"
+          git add docs/assets/
+          git commit -m "Add latest APKs to docs/assets"
+          git push origin main
+
       - name: Install GitHub CLI
         run: sudo apt-get install gh
 
@@ -123,3 +139,25 @@ jobs:
           git add pubspec.yaml
           git commit -m "Update version to ${{ env.NEW_VERSION }}"
           git push origin HEAD:main
+
+  build-and-deploy-react:
+    name: Build & Deploy React App
+    needs: build-and-release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Deploy to firebase
+        run: |
+          cd docs
+          npm install
+          npm run build
+          npm install -g firebase-tools
+          firebase deploy --token "${{ secrets.FIREBASE_TOKEN }}"

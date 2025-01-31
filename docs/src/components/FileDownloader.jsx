@@ -15,7 +15,7 @@ const APKDownloader = () => {
     };
 
     const handleDownload = () => {
-        const apkPath = `/assets/${selectedApk.file}`;
+        const apkPath = `/assets/apks/${selectedApk.file}`;
         const link = document.createElement("a");
         link.href = apkPath;
         link.download = selectedApk.file;
