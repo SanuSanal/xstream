@@ -72,7 +72,7 @@ class NavigationControls extends StatelessWidget {
             String? currentUrl = await webViewController.currentUrl();
             if (currentUrl != null && currentUrl.isNotEmpty) {
               Share.share(
-                  "Don't miss the action! Watch the live match streaming here: $currentUrl");
+                  "Don't miss the action! Watch the live match streaming here: $currentUrl \n\nDownload the app now: https://xstream--app.web.app");
             } else {
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
