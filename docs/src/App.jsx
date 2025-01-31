@@ -1,10 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import logo from './assets/image.png'
 import './App.css'
+import { useLocation } from 'react-router-dom';
+import APKDownloader from './components/FileDownloader';
 
 function App() {
-
   const [isChecked, setIsChecked] = useState(false);
+  const contactUs = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    const hash = location.hash;
+    if (hash === '#contact-us' && contactUs.current) {
+      contactUs.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [location]);
 
   const handleCheckboxChange = (event) => {
     setIsChecked(event.target.checked);
@@ -24,13 +34,15 @@ function App() {
             className="img-fluid"
           />
         </div>
-        
+
         <div className="col-md-6 d-flex flex-column justify-content-center align-items-center text-center bg-white p-4">
           <h1 className="display-4 fw-bold mb-3 text-dark">Welcome to XStream</h1>
           <p className="fs-5 text-secondary mb-4">
             The ultimate app for seamless video streaming! Whether you're a football fanatic or a movie lover, XStream lets you stream live from various sites, completely hassle-free.
           </p>
-          <button className="btn btn-primary btn-lg px-4 py-2 shadow" onClick={handleDownloadClick}>Download Now</button>
+
+          <APKDownloader />
+
           <h1 className="mt-5 display-6 fw-bold">How to Use XStream</h1>
           <ul className="list-unstyled mt-3">
             <li className="d-flex align-items-center mb-3">
@@ -53,7 +65,7 @@ function App() {
         </div>
       </div>
 
-      <div className="container-fluid py-5">
+      <div ref={contactUs} className="container-fluid py-5">
         <div className="row justify-content-center">
           <div className="col-lg-6">
             <div className="contact-form p-4 border rounded shadow-sm bg-white">

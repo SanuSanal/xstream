@@ -367,7 +367,7 @@ class WebViewPageState extends State<WebViewPage> {
 
                   final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-                  String repoUrl = 'https://sanusanal.github.io/xstream/';
+                  String repoUrl = 'https://xstream--app.web.app';
                   Uri url = Uri.parse(repoUrl);
                   if (await canLaunchUrl(url)) {
                     launchUrl(url);

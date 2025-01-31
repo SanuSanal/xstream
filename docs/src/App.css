@@ -3,3 +3,8 @@
         height: auto !important;
     }
 }
+
+.btn-group .dropdown button {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
