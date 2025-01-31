@@ -85,9 +85,9 @@ jobs:
         run: |
           flutter build apk --release --split-per-abi
     
-      - name: Move APKs to docs/assets/
+      - name: Move APKs to docs/assets/apks
         run: |
-          mkdir -p docs/assets
+          mkdir -p docs/assets/apks
           rm -rf docs/assets/apks/*
           mv build/app/outputs/apk/release/*-v7a-*.apk docs/assets/apks/xstream-armeabi-v7a-release.apk
           mv build/app/outputs/apk/release/*-v8a-*.apk docs/assets/apks/xstream-arm64-v8a-release.apk
