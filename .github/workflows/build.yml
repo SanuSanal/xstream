@@ -123,3 +123,12 @@ jobs:
           git add pubspec.yaml
           git commit -m "Update version to ${{ env.NEW_VERSION }}"
           git push origin HEAD:main
+
+      - name: Delete older releases
+        uses: dev-drprasad/delete-older-releases@v0.3.4
+        with:
+          keep_latest: 5
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
