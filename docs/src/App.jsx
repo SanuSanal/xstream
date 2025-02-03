@@ -65,10 +65,10 @@ function App() {
         </div>
       </div>
 
-      <div ref={contactUs} className="container-fluid py-5">
+      <div className="container-fluid py-5">
         <div className="row justify-content-center">
           <div className="col-lg-6">
-            <div className="contact-form p-4 border rounded shadow-sm bg-white">
+            <div ref={contactUs} className="contact-form p-4 border rounded shadow-sm bg-white">
               <h1 className="text-center mb-4">Contact Developer</h1>
               <form
                 className="row"
