@@ -5,12 +5,14 @@ import './index.css'
 import App from './App.jsx'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import StreamPlayer from './StreamPlayer.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
      <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/load" element={<StreamPlayer />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
