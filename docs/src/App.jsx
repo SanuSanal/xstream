@@ -137,6 +137,7 @@ function App() {
       <div className="d-flex flex-column">
         <footer className="footer text-center py-3 mt-auto bg-light">
           <p>© 2025 XStream. All rights reserved.</p>
+          <p>Web App version 0.0.3</p>
         </footer>
       </div>
     </>

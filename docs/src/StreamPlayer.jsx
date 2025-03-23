@@ -5,7 +5,7 @@ const StreamPlayer = () => {
     const location = useLocation();
     const params = new URLSearchParams(location.search);
 
-    const currentUrl = params.getAll('ref')[0] || "https://www.vipbox.lc";
+    const currentUrl = params.getAll('url')[0] || "https://www.vipbox.lc";
 
     return (
         <div className="stream-container">
