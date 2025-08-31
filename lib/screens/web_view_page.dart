@@ -80,6 +80,7 @@ class WebViewPageState extends State<WebViewPage> {
               _injectListnerMethod();
             }
             _hideHeader();
+            _hideBigImages();
           },
           onHttpError: (HttpResponseError error) {},
           onWebResourceError: (WebResourceError error) {},
@@ -176,6 +177,92 @@ class WebViewPageState extends State<WebViewPage> {
           });
         }
       ''';
+
+    await _webViewController.runJavaScript(script);
+  }
+
+  void _hideBigImages() async {
+    String script = '''
+    (function() {
+      document.querySelectorAll('iframe').forEach(iframe => {
+        if (!(iframe.hasAttribute('allowfullscreen') || iframe.hasAttribute('src'))) {
+          iframe.remove();
+        }
+      });
+
+      const placeholder = 'https://img.icons8.com/carbon-copy/100/image.png';
+
+      function maskImage(img) {
+        if (img && img.tagName === 'IMG') {
+          if (img.naturalWidth > 151 || img.naturalHeight > 151) {
+            img.src = placeholder;
+          }
+        }
+      }
+
+      function maskAllImages(root = document) {
+        root.querySelectorAll('img').forEach(maskImage);
+      }
+
+      // Mask existing images immediately
+      maskAllImages();
+
+      // Observe DOM changes globally
+      const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+          mutation.addedNodes.forEach(node => {
+            if (!node) return;
+
+            if (node.tagName === 'IMG') {
+              maskImage(node);
+            } else if (node.tagName === 'IFRAME') {
+              maskIframe(node);
+            } else if (node.querySelectorAll) {
+              // Mask any images inside added subtree
+              maskAllImages(node);
+
+              // Also look for iframes inside added subtree
+              node.querySelectorAll('iframe').forEach(maskIframe);
+            }
+          });
+        });
+      });
+
+      observer.observe(document.documentElement, { childList: true, subtree: true });
+
+      function maskIframe(iframe) {
+        try {
+          const doc = iframe.contentDocument || iframe.contentWindow.document;
+          if (!doc) return;
+
+          // Mask existing images inside iframe
+          doc.querySelectorAll('img').forEach(maskImage);
+
+          // Observe dynamically added images inside the iframe
+          const iframeObserver = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+              mutation.addedNodes.forEach(node => {
+                if (!node) return;
+                if (node.tagName === 'IMG') {
+                  maskImage(node);
+                } else if (node.querySelectorAll) {
+                  node.querySelectorAll('img').forEach(maskImage);
+                }
+              });
+            });
+          });
+
+          iframeObserver.observe(doc.documentElement, { childList: true, subtree: true });
+        } catch(e) {
+          console.log('Cannot access iframe:', e);
+        }
+      }
+
+      // Also mask iframes already on the page
+      document.querySelectorAll('iframe').forEach(maskIframe);
+
+    })();
+  ''';
 
     await _webViewController.runJavaScript(script);
   }
