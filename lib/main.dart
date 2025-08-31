@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:xstream/screens/web_view_page.dart';
+import 'package:xstream/service/log_service.dart';
 
 void main() {
+  LogService().log("App Started");
   runApp(const MyApp());
 }
 

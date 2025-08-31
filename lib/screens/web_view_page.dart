@@ -4,10 +4,11 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:xstream/screens/about_page.dart';
 import 'package:xstream/screens/donate_page.dart';
 import 'package:xstream/screens/home_page_not_found_page.dart';
-import 'package:xstream/screens/match_schedule_page.dart';
+import 'package:xstream/screens/log_page.dart';
 import 'package:xstream/screens/navigation_controls.dart';
 import 'package:xstream/screens/settings_page.dart';
 import 'package:xstream/service/database_service.dart';
+import 'package:xstream/service/log_service.dart';
 import 'package:xstream/util/app_update_widget.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -30,6 +31,8 @@ class WebViewPageState extends State<WebViewPage> {
 
   final dbService = DatabaseService();
   late final WebViewController _webViewController;
+
+  final logService = LogService();
 
   @override
   void initState() {
@@ -84,10 +87,15 @@ class WebViewPageState extends State<WebViewPage> {
             Uri uri = Uri.parse(request.url);
             String domain = uri.host;
 
+            logService.log('Navigation requested to ${request.url}');
+            logService.log('Computed domain is $domain');
+
             if (_isWhitelisted(domain)) {
+              logService.log('Allowed navigation to ${request.url}');
               return NavigationDecision.navigate;
             }
 
+            logService.log('Blocked navigation to ${request.url}');
             _showSnackBarMessage('$domain Blocked.', url: uri);
             return NavigationDecision.prevent;
           },
@@ -292,16 +300,6 @@ class WebViewPageState extends State<WebViewPage> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.calendar_month),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const MatchSchedulePage()),
-              );
-            },
-          ),
-          IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
               SystemNavigator.pop();
@@ -391,6 +389,19 @@ class WebViewPageState extends State<WebViewPage> {
                 onTap: () {
                   _onClearCache();
                   Scaffold.of(context).closeDrawer();
+                },
+              ),
+              ListTile(
+                title: const Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [Icon(Icons.sticky_note_2_outlined), Text('Logs')],
+                ),
+                onTap: () {
+                  Scaffold.of(context).closeDrawer();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LogPage()),
+                  );
                 },
               ),
               ListTile(
